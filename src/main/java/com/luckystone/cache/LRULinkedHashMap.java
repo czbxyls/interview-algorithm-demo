@@ -1,4 +1,4 @@
-package com.luckystone.lru;
+package com.luckystone.cache;
 
 import java.util.*;
 
