@@ -5,7 +5,7 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
 
 /**
- * 两个线程交替打印1~100奇偶数
+ * 目的：两个线程交替打印1~100奇偶数
  * semaphore + barrier实现
  */
 public class EvenOddPrinter5 {

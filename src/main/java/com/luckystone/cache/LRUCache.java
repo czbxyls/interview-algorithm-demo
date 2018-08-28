@@ -3,6 +3,12 @@ package com.luckystone.cache;
 import java.util.HashMap;
 import java.util.Iterator;
 
+/**
+ * 目的：实现一个简单基于LRU的缓存
+ * HashMap + 双向链表实现
+ * @param <K>
+ * @param <V>
+ */
 public class LRUCache<K, V> implements Iterable<K> {
 
     private Node head;

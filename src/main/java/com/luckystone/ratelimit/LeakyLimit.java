@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * 目的：实现一个限流算法
  * 参考：https://juejin.im/entry/57cce5d379bc440063066d09
  * 漏斗算法
  */

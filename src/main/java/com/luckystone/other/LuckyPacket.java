@@ -1,4 +1,4 @@
-package com.luckystone.redpackets;
+package com.luckystone.other;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

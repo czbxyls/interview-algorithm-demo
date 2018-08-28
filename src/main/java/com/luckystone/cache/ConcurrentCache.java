@@ -4,6 +4,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 目的：实现一个简单基于LRU的缓存
  * 参考：https://lijf.me/2017/06/28/from-weakreference-to-weakhashmap/
  * 来自Tomcat源码ConcurrentCache
  * ConcurrentCache是一种LRU Cache，它将最近没有被使用的数据放在WeakHashMap中，

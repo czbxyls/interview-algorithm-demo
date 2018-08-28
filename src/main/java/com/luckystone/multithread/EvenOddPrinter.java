@@ -3,7 +3,7 @@ package com.luckystone.multithread;
 import java.util.Date;
 
 /**
- * 两个线程交替打印1~100奇偶数
+ * 目的：两个线程交替打印1~100奇偶数
  * volatile实现，不需要加锁
  * 缺点：部分时间花在自旋上了
  * 优点：打印的数据量大时效率高

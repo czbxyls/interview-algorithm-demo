@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * google面试题：已知rand5求rand7
+ * google面试题：
+ *      已知rand5求rand7
  * 代码实现参考：https://blog.csdn.net/u010025211/article/details/49668017
  */
 public class Rand {

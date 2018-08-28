@@ -5,7 +5,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 两个线程交替打印1~100奇偶数
+ * 目的：两个线程交替打印1~100奇偶数
  * synchronized + wait/notify实现
  */
 public class EvenOddPrinter3 {

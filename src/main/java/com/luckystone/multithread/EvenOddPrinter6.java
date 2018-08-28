@@ -8,7 +8,7 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
 
 /**
- * 两个线程交替打印1~100奇偶数
+ * 目的：两个线程交替打印1~100奇偶数
  * 通过两个ArrayBlockingQueue实现
  */
 public class EvenOddPrinter6 {
@@ -58,11 +58,11 @@ public class EvenOddPrinter6 {
         }
     }
 
-    public boolean isCanPut() {
+    private boolean isCanPut() {
         return edenQueue.isEmpty() && oddQueue.isEmpty();
     }
 
-    public void putValue(int value) {
+    private void putValue(int value) {
         try {
             if((value & 1) == 1) oddQueue.put(value);
             else edenQueue.put(value);
