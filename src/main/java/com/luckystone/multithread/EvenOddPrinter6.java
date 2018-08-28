@@ -9,7 +9,7 @@ import java.util.concurrent.Semaphore;
 
 /**
  * 两个线程交替打印1~100奇偶数
- * synchronized + wait/notify实现
+ * 通过两个ArrayBlockingQueue实现
  */
 public class EvenOddPrinter6 {
 
