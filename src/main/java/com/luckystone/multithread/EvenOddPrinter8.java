@@ -10,7 +10,7 @@ import java.util.concurrent.Semaphore;
 
 /**
  * 目的：两个线程交替打印1~100奇偶数
- * 通过PipedOutputStream和PipedInputStream(管道) + semaphore(同步)实现
+ * 通过PipedOutputStream和PipedInputStream(管道)实现
  * 注意：该案例仅用于演示不同线程间如何通过管道传递数据，
  * 而管道方式更适用于解决生产者消费者问题，该demo只是为了学习用
  */
@@ -18,13 +18,11 @@ public class EvenOddPrinter8 {
 
     private static final int MAX_NUM = 1000;
 
-    private PipedOutputStream out = new PipedOutputStream();
+    private PipedOutputStream oddOut = new PipedOutputStream();
+    private PipedInputStream oddIn = new PipedInputStream();
 
-    private PipedInputStream in = new PipedInputStream();
-
-    private Semaphore oddSem = new Semaphore(1);
-
-    private Semaphore evenSem = new Semaphore(0);
+    private PipedOutputStream evenOut = new PipedOutputStream();
+    private PipedInputStream evenIn = new PipedInputStream();
 
     private EvenThreadRunnable evenThreadRunnable = new EvenThreadRunnable();
 
@@ -41,11 +39,9 @@ public class EvenOddPrinter8 {
             try {
                 int index = 0;
                 while (true) {
-                    evenSem.acquire();
-                    index = readValue();
-                    System.out.println("round=" + index);
-                    oddSem.release();
-                    if(index < 0)  continue;
+                    index = readValue(evenIn);
+                    //System.out.println("round=" + index);
+                    if(index < 0) continue;
                     index = print(index);
                     if(index >= MAX_NUM) break;
                 }
@@ -62,10 +58,8 @@ public class EvenOddPrinter8 {
             try {
                 int index = 0;
                 while (true) {
-                    oddSem.acquire();
-                    index = readValue();
-                    System.out.println("round=" + index);
-                    evenSem.release();
+                    index = readValue(oddIn);
+                    //System.out.println("round=" + index);
                     if(index < 0)  continue;
                     index = print(index);
                     if(index >= MAX_NUM-1) break;
@@ -77,20 +71,21 @@ public class EvenOddPrinter8 {
         }
     }
 
-    private void putValue(int value) {
+    private void putValue(PipedOutputStream outputStream, int value) {
         try {
             byte[] data = new byte[4];
             data = intToBytes(value);
-            out.write(data);
+            outputStream.write(data);
+            outputStream.flush();
         }catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private int readValue() {
+    private int readValue(PipedInputStream inputStream) {
         try {
             byte[] data = new byte[4];
-            int ret = in.read(data, 0, 4);
+            int ret = inputStream.read(data, 0, 4);
             if(ret == -1) return -1;
             return bytesToInt(data, 0);
         }catch (Exception e) {
@@ -99,11 +94,20 @@ public class EvenOddPrinter8 {
         return -1;
     }
 
+    private boolean isCanPut() throws IOException {
+        return true;
+    }
+
     public void produceNumber() {
         try {
             int i = 1;
             while(i<=EvenOddPrinter8.MAX_NUM) {
-                putValue(i);
+                if(isCanPut()) {
+                    if(i%2==1) putValue(oddOut, i);
+                    else putValue(evenOut, i);
+                    Thread.sleep(1);
+                    //睡眠1ms，放数据
+                }
                 i++;
             }
         } catch (Exception ex) {
@@ -114,7 +118,8 @@ public class EvenOddPrinter8 {
 
     public void connect() {
         try {
-            in.connect(out);
+            oddIn.connect(oddOut);
+            evenIn.connect(evenOut);
         } catch (IOException ex) {
             ex.printStackTrace();
         }

@@ -22,7 +22,7 @@ public class EvenOddPrinter {
     private OddThreadRunnable oddThreadRunnable = new OddThreadRunnable();
 
     private void print(int index) {
-        System.out.println(Thread.currentThread().getName() + ": " + index);
+        System.out.println("Thread-" +  Thread.currentThread().getName() + ": " + index);
     }
 
     public class EvenThreadRunnable implements Runnable {
