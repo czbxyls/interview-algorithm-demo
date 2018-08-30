@@ -8,6 +8,7 @@ import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 /**
  * 目的：两个线程交替打印1~100奇偶数
  * 自定义AQS实现
+ * 需要增加一个栅栏，否则因为是非公平锁抢占，可能出现死锁的情况
  */
 public class EvenOddPrinter4 {
 
