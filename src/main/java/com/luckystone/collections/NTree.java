@@ -1,8 +1,9 @@
-package com.luckystone.algorithm;
+package com.luckystone.collections;
+
+import com.luckystone.algorithm.bean.Node;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.luckystone.algorithm.bean.*;
 
 public class NTree {
 

@@ -1,4 +1,4 @@
-package com.luckystone.algorithm;
+package com.luckystone.collections;
 
 import java.util.ArrayList;
 import java.util.List;
