@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import com.luckystone.algorithm.bean.*;
+import com.luckystone.collections.bean.*;
 
 
 public class BinaryTree {

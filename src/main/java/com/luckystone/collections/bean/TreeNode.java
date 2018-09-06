@@ -1,4 +1,4 @@
-package com.luckystone.algorithm.bean;
+package com.luckystone.collections.bean;
 
 public class TreeNode {
     public int val;

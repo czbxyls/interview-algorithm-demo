@@ -1,4 +1,4 @@
-package com.luckystone.algorithm.bean;
+package com.luckystone.collections.bean;
 import java.util.List;
 
 public class Node {

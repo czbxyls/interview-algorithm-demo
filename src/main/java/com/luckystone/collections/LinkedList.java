@@ -1,6 +1,6 @@
 package com.luckystone.collections;
 
-import com.luckystone.algorithm.bean.ListNode;
+import com.luckystone.collections.bean.ListNode;
 
 public class LinkedList {
 

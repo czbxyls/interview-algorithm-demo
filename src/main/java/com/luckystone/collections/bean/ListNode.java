@@ -1,4 +1,4 @@
-package com.luckystone.algorithm.bean;
+package com.luckystone.collections.bean;
 
 public class ListNode {
     public int val;
