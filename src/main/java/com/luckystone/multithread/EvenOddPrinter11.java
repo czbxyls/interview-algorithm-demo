@@ -1,32 +1,31 @@
 package com.luckystone.multithread;
 
 import java.util.Date;
-import java.util.concurrent.Exchanger;
+import java.util.concurrent.SynchronousQueue;
 
 /**
  * 目的：两个线程交替打印1~100奇偶数
- * 通过两个Exchanger + volatile实现
- * 生产者生产数字，通过Exchanger交换给消费者，并打印出来
- * Exchanger特点：两个线程交换数据，若只有一个线程，则阻塞
+ * 通过两个SynchronousQueue + volatile实现
+ * 生产者生产数字，通过SynchronousQueue发送给消费者，并打印出来
+ * SynchronousQueue与Exchanger类似，SynchronousQueue是单向的，Exchanger是双向的
  */
-public class EvenOddPrinter10 {
+public class EvenOddPrinter11 {
 
     private static final int MAX_NUM = 1000;
 
     private volatile int consumerIndex = 0;
 
-    private Exchanger<Integer> oddExchanger = new Exchanger<Integer>();
+    private SynchronousQueue<Integer> oddQueue = new SynchronousQueue<Integer>();
 
-    private Exchanger<Integer> edenExchanger = new Exchanger<Integer>();
+    private SynchronousQueue<Integer> edenQueue = new SynchronousQueue<Integer>();
 
     private EvenThreadRunnable evenThreadRunnable = new EvenThreadRunnable();
 
     private OddThreadRunnable oddThreadRunnable = new OddThreadRunnable();
 
-    private int print(Exchanger<Integer> exchanger) {
-        int value = 0;
+    private int print(SynchronousQueue<Integer> queue) {
         try {
-            value = exchanger.exchange(value);
+            int value = queue.take();
             System.out.println("Thread-" + Thread.currentThread().getName() + ": " + value);
             consumerIndex = value;
         }catch (Exception ex) {
@@ -40,7 +39,7 @@ public class EvenOddPrinter10 {
         public void run() {
             int index = 0;
             while (true) {
-                index = print(edenExchanger);
+                index = print(edenQueue);
                 if(index >= MAX_NUM) break;
             }
             System.out.println("consumer: " + Thread.currentThread().getName() + " finish!");
@@ -52,7 +51,7 @@ public class EvenOddPrinter10 {
         public void run() {
             int index = 0;
             while (true) {
-                index = print(oddExchanger);
+                index = print(oddQueue);
                 if(index >= MAX_NUM-1) break;
             }
             System.out.println("consumer: " + Thread.currentThread().getName() + " finish!");
@@ -65,8 +64,8 @@ public class EvenOddPrinter10 {
 
     private void putValue(int value) {
         try {
-            if((value & 1) == 1) oddExchanger.exchange(value);
-            else edenExchanger.exchange(value);
+            if((value & 1) == 1) oddQueue.put(value);
+            else edenQueue.put(value);
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,7 +85,7 @@ public class EvenOddPrinter10 {
     public static void main(String[] args) throws Exception {
         Date start = new Date();
 
-        EvenOddPrinter10 printer = new EvenOddPrinter10();
+        EvenOddPrinter11 printer = new EvenOddPrinter11();
         Thread oddThread = new Thread(printer.oddThreadRunnable);
         oddThread.setName("odd");
 
