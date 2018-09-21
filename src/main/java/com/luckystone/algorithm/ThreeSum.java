@@ -1,4 +1,4 @@
-package com.luckystone.other;
+package com.luckystone.algorithm;
 
 import java.util.*;
 

@@ -1,6 +1,4 @@
-package com.luckystone.algorithm;
-
-import com.luckystone.algorithm.utils.HashFunction;
+package com.luckystone.distributed;
 
 import java.util.*;
 

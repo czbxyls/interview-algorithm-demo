@@ -1,4 +1,4 @@
-package com.luckystone.algorithm;
+package com.luckystone.distributed;
 
 import java.util.BitSet;
 

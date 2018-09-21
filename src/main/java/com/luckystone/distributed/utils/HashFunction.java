@@ -1,4 +1,4 @@
-package com.luckystone.algorithm.utils;
+package com.luckystone.distributed.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

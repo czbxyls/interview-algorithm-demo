@@ -1,4 +1,4 @@
-package com.luckystone.algorithm;
+package com.luckystone.distributed;
 
 /**
  * 分布式id生成算法
