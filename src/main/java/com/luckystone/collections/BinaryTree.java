@@ -1,10 +1,10 @@
 package com.luckystone.collections;
 
+import com.luckystone.collections.bean.TreeNode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-
-import com.luckystone.collections.bean.*;
 
 
 public class BinaryTree {

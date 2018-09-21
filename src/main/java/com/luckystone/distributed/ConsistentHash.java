@@ -1,16 +1,19 @@
 package com.luckystone.distributed;
 
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class ConsistentHash<T> {
-    private final HashFunction hashFunction;
+
+    /**md5*/
+    private MessageDigest md5 = null;
     private final int numberOfReplicas;// 节点的复制因子,实际节点个数 * numberOfReplicas =虚拟节点个数
     private final SortedMap<Long, T> circle = new TreeMap<Long, T>();// 存储虚拟节点的hash值到真实节点的映射
 
-    public ConsistentHash(HashFunction hashFunction,
-                          int numberOfReplicas,
+    public ConsistentHash(int numberOfReplicas,
                           Collection<T> nodes) {
-        this.hashFunction = hashFunction;
         this.numberOfReplicas = numberOfReplicas;
         for (T node : nodes)
             add(node);
@@ -23,12 +26,12 @@ public class ConsistentHash<T> {
              * 不同的虚拟节点(i不同)有不同的hash值,但都对应同一个实际机器node
              * 虚拟node一般是均衡分布在环上的,数据存储在顺时针方向的虚拟node上
              */
-            circle.put(hashFunction.hash(node.toString() + i), node);
+            circle.put(hash(node.toString() + i), node);
     }
 
     public void remove(T node) {
         for (int i = 0; i < numberOfReplicas; i++)
-            circle.remove(hashFunction.hash(node.toString() + i));
+            circle.remove(hash(node.toString() + i));
     }
 
     /*
@@ -39,7 +42,7 @@ public class ConsistentHash<T> {
     public T get(Object key) {
         if (circle.isEmpty())
             return null;
-        long hash = hashFunction.hash((String) key);// node 用String来表示,获得node在哈希环中的hashCode
+        long hash = hash((String) key);// node 用String来表示,获得node在哈希环中的hashCode
         if (!circle.containsKey(hash)) {//数据映射在两台虚拟机器所在环之间,就需要按顺时针方向寻找机器
             SortedMap<Long, T> tailMap = circle.tailMap(hash);
             hash = tailMap.isEmpty() ? circle.firstKey() : tailMap.firstKey();
@@ -51,6 +54,28 @@ public class ConsistentHash<T> {
         return circle.size();
     }
 
+    /**
+     * 使用MD5算法
+     * @param key
+     * @return
+     */
+    public long hash(String key) {
+        if (md5 == null) {
+            try {
+                md5 = MessageDigest.getInstance("MD5");
+            } catch (NoSuchAlgorithmException e) {
+                throw new IllegalStateException("no md5 algorythm found");
+            }
+        }
+
+        md5.reset();
+        md5.update(key.getBytes());
+        byte[] bKey = md5.digest();
+        long res = ((long) (bKey[3] & 0xFF) << 24) | ((long) (bKey[2] & 0xFF) << 16) | ((long) (bKey[1] & 0xFF) << 8)
+                | (long) (bKey[0] & 0xFF);
+        return res & 0xffffffffL;
+    }
+
     /*
      * 查看MD5算法生成的hashCode值---表示整个哈希环中各个虚拟节点位置
      */
@@ -60,7 +85,6 @@ public class ConsistentHash<T> {
         for(Long hashCode : sortedSets){
             System.out.println(hashCode);
         }
-
         System.out.println("----each location 's distance are follows: ----");
         /*
          * 查看用MD5算法生成的long hashCode 相邻两个hashCode的差值
@@ -77,14 +101,13 @@ public class ConsistentHash<T> {
         }
     }
 
-
     public static void main(String[] args) {
         Set<String> nodes = new HashSet<String>();
         nodes.add("A");
         nodes.add("B");
         nodes.add("C");
 
-        ConsistentHash<String> consistentHash = new ConsistentHash<String>(new HashFunction(), 2, nodes);
+        ConsistentHash<String> consistentHash = new ConsistentHash<String>(2, nodes);
         consistentHash.add("D");
 
         System.out.println("hash circle size: " + consistentHash.getSize());

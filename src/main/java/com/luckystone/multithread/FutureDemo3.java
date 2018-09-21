@@ -1,6 +1,9 @@
 package com.luckystone.multithread;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /***
  * 参考：http://www.importnew.com/21312.html

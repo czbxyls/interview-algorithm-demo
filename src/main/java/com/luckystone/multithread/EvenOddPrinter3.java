@@ -1,8 +1,6 @@
 package com.luckystone.multithread;
 
 import java.util.Date;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 目的：两个线程交替打印1~100奇偶数

@@ -1,7 +1,6 @@
 package com.luckystone.multithread;
 
 import java.util.Date;
-import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
 
 /**

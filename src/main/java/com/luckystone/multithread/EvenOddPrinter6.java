@@ -1,11 +1,8 @@
 package com.luckystone.multithread;
 
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.Semaphore;
 
 /**
  * 目的：两个线程交替打印1~100奇偶数

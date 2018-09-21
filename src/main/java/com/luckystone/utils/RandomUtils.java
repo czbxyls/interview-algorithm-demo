@@ -1,4 +1,4 @@
-package com.luckystone.distributed.utils;
+package com.luckystone.utils;
 
 import java.util.Random;
 

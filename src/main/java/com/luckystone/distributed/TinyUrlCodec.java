@@ -1,6 +1,6 @@
 package com.luckystone.distributed;
 
-import com.luckystone.distributed.utils.CryptUtils;
+import com.luckystone.utils.CryptUtils;
 
 import java.util.HashMap;
 import java.util.Map;
