@@ -15,7 +15,7 @@ public class LockFreeQueue<T> {
     private AtomicReference<Node<T>> tail = new AtomicReference<Node<T>>();
     private AtomicReference<Node<T>> header = new AtomicReference<Node<T>>();
 
-    public T take(T e) {
+    public T put(T e) {
         Node<T> newNode = new Node<>(e, null);
         Node<T> prevTail = tail.getAndSet(newNode);
         if(prevTail != null) {
@@ -26,7 +26,7 @@ public class LockFreeQueue<T> {
         return e;
     }
 
-    public T offer() {
+    public T take() {
         Node<T> oldHead, newNode;
         while (true) {
             oldHead = header.get();
@@ -69,13 +69,13 @@ public class LockFreeQueue<T> {
         LockFreeQueue<Integer> queue = new LockFreeQueue<>();
 
         ConcurrencyRun.run(100, ()-> {
-            System.out.println("take: " + queue.take(1));
-            System.out.println("take: " + queue.take(2));
-            System.out.println("take: " + queue.take(3));
+            System.out.println("put: " + queue.put(1));
+            System.out.println("put: " + queue.put(2));
+            System.out.println("put: " + queue.put(3));
 
-            System.out.println("offer: " + queue.offer());
-            System.out.println("offer: " + queue.offer());
-            System.out.println("offer: " + queue.offer());
+            System.out.println("take: " + queue.take());
+            System.out.println("take: " + queue.take());
+            System.out.println("take: " + queue.take());
         });
 
     }

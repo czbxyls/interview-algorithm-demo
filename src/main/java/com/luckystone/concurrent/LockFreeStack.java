@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * https://blog.csdn.net/vernonzheng/article/details/8206349
- * 基于原子类实现的线程安全栈
+ * 基于原子类实现的线程安全栈，略有修改
  * @param <T>
  */
 public class LockFreeStack<T> {
