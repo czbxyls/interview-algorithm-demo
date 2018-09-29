@@ -109,4 +109,69 @@ public class LinkedList {
         }
         return pre;
     }
+
+    /**
+     * 求链表的中间节点
+     * 1. 先求长度，再取中间，遍历1.5n
+     * 2. 快慢节点，快走两步，慢走一步，快走到终点，慢正好在中间节点
+     * @param head
+     * @return
+     */
+    public ListNode middleNode(ListNode head) {
+        if(head == null) return head;
+        int length = 1;
+        ListNode current = head;
+        while(current != null) {
+            length++;
+            current = current.next;
+        }
+
+        length = length/2;
+        current = head;
+        while(length > 0) {
+            current = current.next;
+            length--;
+        }
+        return current;
+    }
+
+    /**
+     * 求两个链表的第一个交集节点
+     * https://leetcode.com/problems/intersection-of-two-linked-lists/
+     * @param headA
+     * @param headB
+     * @return
+     */
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        int len1 = 0, len2 = 0;
+
+        ListNode nodeA = headA;
+        while(nodeA!=null) {
+            len1++;
+            nodeA = nodeA.next;
+        }
+        ListNode nodeB = headB;
+        while(nodeB!=null) {
+            len2++;
+            nodeB = nodeB.next;
+        }
+        int count = Math.abs(len1 - len2);
+        nodeA = headA;
+        nodeB = headB;
+
+        if(len1 > len2) {
+            while(count-- > 0) {
+                nodeA = nodeA.next;
+            }
+        } else if(len1 < len2) {
+            while(count-- > 0) {
+                nodeB = nodeB.next;
+            }
+        }
+        while(nodeA!=nodeB) {
+            nodeA = nodeA.next;
+            nodeB = nodeB.next;
+        }
+        return nodeA;
+    }
 }
