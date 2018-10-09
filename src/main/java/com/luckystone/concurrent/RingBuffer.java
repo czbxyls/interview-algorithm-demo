@@ -10,12 +10,16 @@ public class RingBuffer<T> implements Iterable<T>  {
     private final int capacity;
 
     public RingBuffer(int capacity) {
-        this.buffer = (T[]) new Object[capacity];
-        this.capacity = capacity;
+        this.buffer = (T[]) new Object[capacity + 1]; //最后一个不算
+        this.capacity = capacity + 1;
     }
 
     public boolean isEmpty() {
         return header == tail;
+    }
+
+    public boolean isFull() {
+        return (tail + 1) % buffer.length == header;
     }
 
     public int size() {
@@ -23,7 +27,7 @@ public class RingBuffer<T> implements Iterable<T>  {
     }
 
     public boolean put(T item) {
-        if ((tail + 1) % buffer.length == header) {
+        if (isFull()) {
             //throw new RuntimeException("Ring buffer overflow");
             return false;
         }
