@@ -64,15 +64,22 @@ public class LockFreeStack<T> {
             System.out.println("push: " + stack.push(9));
             System.out.println("push: " + stack.push(8));
 
-            System.out.println("top: " + stack.top());
-            System.out.println("pop: " + stack.pop());
-            System.out.println("top: " + stack.top());
-            System.out.println("pop: " + stack.pop());
-
-            System.out.println("top: " + stack.top());
-            System.out.println("pop: " + stack.pop());
+//            System.out.println("top: " + stack.top());
+//            System.out.println("pop: " + stack.pop());
+//            System.out.println("top: " + stack.top());
+//            System.out.println("pop: " + stack.pop());
+//
+//            System.out.println("top: " + stack.top());
+//            System.out.println("pop: " + stack.pop());
             //System.out.println("pop: " + stack.pop());
         });
+
+        int count = 0;
+        while(!stack.isEmpty()) {
+            stack.pop();
+            count++;
+        }
+        System.out.println(count);
 
     }
 }

@@ -11,48 +11,55 @@ import java.util.concurrent.atomic.AtomicReference;
  * @param <T>
  */
 public class LockFreeQueue<T> {
+    private AtomicReference<Node<T>> refHead = new AtomicReference<Node<T>>();
+    private AtomicReference<Node<T>> refTail = new AtomicReference<Node<T>>();
 
-    private AtomicReference<Node<T>> tail = new AtomicReference<Node<T>>();
-    private AtomicReference<Node<T>> header = new AtomicReference<Node<T>>();
+    public LockFreeQueue() {
+        Node<T> dummy = new Node<T>(null, null);
+        refHead = new AtomicReference<Node<T>>(dummy);
+        refTail = new AtomicReference<Node<T>>(dummy);
+    }
 
     public T put(T e) {
         Node<T> newNode = new Node<>(e, null);
-        Node<T> prevTail = tail.getAndSet(newNode);
-        if(prevTail != null) {
-            prevTail.next = newNode;
-        } else {
-            header.set(newNode);
-        }
+        Node<T> prevTail = refTail.getAndSet(newNode);
+        prevTail.next = newNode;
         return e;
     }
 
     public T take() {
-        Node<T> oldHead, newNode;
-        while (true) {
-            oldHead = header.get();
-
-            if(oldHead == null) {
+        Node<T> head, next;
+        // move head node to the next node using atomic semantics
+        // as long as next node is not null
+        do {
+            head = refHead.get();
+            next = head.next;
+            if (next == null) {
+                // empty list
                 return null;
-            } else {
-                newNode = oldHead.next;
-                if(header.compareAndSet(oldHead, newNode)) {
-                    return oldHead.object;
-                }
             }
-        }
+            // try until the whole loop executes pseudo-atomically
+            // (i.e. unaffected by modifications done by other threads)
+        } while (!refHead.compareAndSet(head, next));
+
+        T value = next.object;
+        // release the value pointed to by head, keeping the head node dummy
+        next.object = null;
+        return value;
     }
 
     public T getHead() {
-        return header.get() == null ? null : header.get().object;
+        return refHead.get() == null ? null : refHead.get().object;
     }
 
     public T getTail() {
-        return tail.get() == null ? null : tail.get().object;
+        return refTail.get() == null ? null : refTail.get().object;
     }
 
     public boolean isEmpty() {
-        return tail == header && tail == null;
+        return refHead == refTail && refHead.get() == null;
     }
+
 
     private static final class Node<T> {
         private T object;
@@ -70,13 +77,24 @@ public class LockFreeQueue<T> {
 
         ConcurrencyRun.run(100, ()-> {
             System.out.println("put: " + queue.put(1));
+            System.out.println("take: " + queue.take());
             System.out.println("put: " + queue.put(2));
+            System.out.println("take: " + queue.take());
             System.out.println("put: " + queue.put(3));
+            System.out.println("take: " + queue.take());
 
-            System.out.println("take: " + queue.take());
-            System.out.println("take: " + queue.take());
-            System.out.println("take: " + queue.take());
+
+//            System.out.println("take: " + queue.take());
+//            System.out.println("take: " + queue.take());
+//            System.out.println("take: " + queue.take());
         });
+
+        int count = 0;
+        while(queue.getTail() != null) {
+            queue.take();
+            count++;
+        }
+        System.out.println(count);
 
     }
 }
